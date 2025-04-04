@@ -1,21 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-40 flex flex-1 justify-center py-5">
-    <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-        <div class="@container">
-            <div class="@[480px]:p-4">
-                <div class="flex flex-col gap-6 bg-[#2a2a2a] rounded-xl p-6">
-                    <div class="flex flex-col gap-2 text-left border-b border-[#3a2727] pb-4">
-                        <h1 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em]">
-                            Edit game
-                        </h1>
+<div class="relative flex size-full min-h-screen flex-col bg-[#181010] dark group/design-root overflow-x-hidden" style='font-family: "Spline Sans", "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+        <div class="px-4 md:px-8 lg:px-40 flex flex-1 justify-center py-3 md:py-5">
+            <div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1">
+                <div class="@container">
+                    <div class="p-2 @[480px]:p-4">
+                        <h1 class="text-white text-2xl sm:text-3xl font-bold mb-6">Edit Game: {{ $game->title }}</h1>
+                        
+                        @include('games.form', [
+                            'formAction' => route('games.update', $game),
+                            'method' => 'PUT',
+                            'submitButtonText' => 'Update Game'
+                        ])
                     </div>
-                    
-                    <form action="{{ route('games.update', $game) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
-                        @method('PUT')
-                        @include('games.form')
-                    </form>
                 </div>
             </div>
         </div>

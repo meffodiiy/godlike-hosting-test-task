@@ -1,95 +1,95 @@
 @csrf
 
-<div class="flex flex-col gap-6">
-    <!-- Cover Image Upload -->
-    <div class="flex flex-col gap-2">
-        <label for="cover_image" class="text-[#94a3b8] text-sm font-medium leading-none">Cover Image</label>
-        <div class="relative">
-            <input type="file" 
-                   name="cover_image" 
-                   id="cover_image" 
-                   accept="image/*"
-                   class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:bg-[#3b82f6] file:text-white hover:file:bg-[#2563eb] file:my-1 @error('cover_image') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror">
-        </div>
-        @error('cover_image')
-            <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-        @enderror
-        @if(isset($game) && $game->cover_image)
-            <div class="mt-2">
-                <img src="{{ asset('storage/' . $game->cover_image) }}" alt="Current cover image" class="w-32 h-32 object-cover rounded-lg border border-[#475569]">
+<div class="relative flex min-h-screen flex-col bg-[#181010] dark group/design-root overflow-x-hidden" style='font-family: "Spline Sans", "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+        <div class="px-4 md:px-8 lg:px-40 flex flex-1 justify-center py-3 md:py-5">
+            <div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1">
+                <div class="@container">
+                    <div class="p-2 @[480px]:p-4">
+                        @if ($errors->any())
+                            <div class="bg-red-600 text-white p-4 rounded-lg mb-6">
+                                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                
+                        <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data" class="w-full px-0 sm:px-6 space-y-4 sm:space-y-6">
+                            @csrf
+                            @if ($method === 'PUT')
+                                @method('PUT')
+                            @endif
+                            
+                            <div class="mb-4">
+                                <label for="title" class="block text-[#bc9a9a] text-sm font-medium mb-2">Title</label>
+                                <input type="text" name="title" id="title" value="{{ old('title', $game->title ?? '') }}" 
+                                    class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white focus:ring-[#f97316] focus:border-[#f97316]" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="developer" class="block text-[#bc9a9a] text-sm font-medium mb-2">Developer</label>
+                                <input type="text" name="developer" id="developer" value="{{ old('developer', $game->developer ?? '') }}" 
+                                    class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white focus:ring-[#f97316] focus:border-[#f97316]" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="genre" class="block text-[#bc9a9a] text-sm font-medium mb-2">Genre</label>
+                                <input type="text" name="genre" id="genre" value="{{ old('genre', $game->genre ?? '') }}" 
+                                    class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white focus:ring-[#f97316] focus:border-[#f97316]" required>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="mb-4">
+                                    <label for="release_date" class="block text-[#bc9a9a] text-sm font-medium mb-2">Release Date</label>
+                                    <input type="date" name="release_date" id="release_date" value="{{ old('release_date', isset($game) ? $game->release_date->format('Y-m-d') : '') }}" 
+                                        class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white focus:ring-[#f97316] focus:border-[#f97316]" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="platform" class="block text-[#bc9a9a] text-sm font-medium mb-2">Platform</label>
+                                    <input type="text" name="platform" id="platform" value="{{ old('platform', $game->platform ?? '') }}" 
+                                        class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white focus:ring-[#f97316] focus:border-[#f97316]" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="price" class="block text-[#bc9a9a] text-sm font-medium mb-2">Price</label>
+                                <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $game->price ?? '') }}" 
+                                    class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white focus:ring-[#f97316] focus:border-[#f97316]" required>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="cover_image" class="block text-[#bc9a9a] text-sm font-medium mb-2">Cover Image</label>
+                                <input type="file" name="cover_image" id="cover_image" 
+                                    class="w-full bg-[#2a2020] border border-[#563939] rounded-lg p-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#3b3232] file:text-white file:my-1 hover:file:bg-[#4a4040]">
+                                
+                                @if(isset($game) && $game->cover_image)
+                                    <div class="mt-2">
+                                        <p class="text-[#bc9a9a] text-sm">Current image:</p>
+                                        <div class="mt-2 relative w-full h-40 overflow-hidden rounded-lg">
+                                            <img src="{{ asset('storage/' . $game->cover_image) }}" alt="Cover image" class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                    
+                            <div class="flex flex-col sm:flex-row justify-between gap-3">
+                                <a href="{{ route('games.index') }}" 
+                                    class="w-full sm:w-auto flex justify-center items-center rounded-lg py-3 px-6 bg-[#2a2020] border border-[#563939] text-white font-medium hover:bg-[#3a3030] transition-colors">
+                                    Cancel
+                                </a>
+                                <button type="submit" 
+                                    class="w-full sm:w-auto flex justify-center items-center rounded-lg py-3 px-6 bg-[#f97316] text-white font-medium hover:bg-[#ea580c] transition-colors">
+                                    {{ $submitButtonText }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        @endif
-    </div>
-
-    <div class="flex flex-col gap-2">
-        <label for="title" class="text-[#94a3b8] text-sm font-medium leading-none">Title<span class="text-[#3b82f6] ml-0.5">*</span></label>
-        <div class="relative">
-            <input type="text" class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] placeholder:text-[#64748b] shadow-sm @error('title') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror" id="title" name="title" value="{{ old('title', isset($game) ? $game->title : '') }}" placeholder="Enter game title" required>
-        </div>
-        @error('title')
-            <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="flex flex-col gap-2">
-        <label for="developer" class="text-[#94a3b8] text-sm font-medium leading-none">Developer<span class="text-[#3b82f6] ml-0.5">*</span></label>
-        <div class="relative">
-            <input type="text" class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] placeholder:text-[#64748b] shadow-sm @error('developer') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror" id="developer" name="developer" value="{{ old('developer', isset($game) ? $game->developer : '') }}" placeholder="Enter developer name" required>
-        </div>
-        @error('developer')
-            <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="flex flex-col gap-2">
-        <label for="genre" class="text-[#94a3b8] text-sm font-medium leading-none">Genre<span class="text-[#3b82f6] ml-0.5">*</span></label>
-        <div class="relative">
-            <input type="text" class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] placeholder:text-[#64748b] shadow-sm @error('genre') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror" id="genre" name="genre" value="{{ old('genre', isset($game) ? $game->genre : '') }}" placeholder="Enter game genre" required>
-        </div>
-        @error('genre')
-            <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
-        <div class="flex flex-col gap-2">
-            <label for="release_date" class="text-[#94a3b8] text-sm font-medium leading-none">Release Date<span class="text-[#3b82f6] ml-0.5">*</span></label>
-            <div class="relative">
-                <input type="date" class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] placeholder:text-[#64748b] shadow-sm @error('release_date') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror" id="release_date" name="release_date" value="{{ old('release_date', isset($game) ? $game->release_date->format('Y-m-d') : '') }}" required>
-            </div>
-            @error('release_date')
-                <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="flex flex-col gap-2">
-            <label for="price" class="text-[#94a3b8] text-sm font-medium leading-none">Price<span class="text-[#3b82f6] ml-0.5">*</span></label>
-            <div class="relative">
-                <input type="number" step="0.01" class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] placeholder:text-[#64748b] shadow-sm @error('price') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror" id="price" name="price" value="{{ old('price', isset($game) ? $game->price : '') }}" placeholder="0.00" required>
-                <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-[#94a3b8]">$</div>
-            </div>
-            @error('price')
-                <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-            @enderror
         </div>
     </div>
-
-    <div class="flex flex-col gap-2">
-        <label for="platform" class="text-[#94a3b8] text-sm font-medium leading-none">Platform<span class="text-[#3b82f6] ml-0.5">*</span></label>
-        <div class="relative">
-            <input type="text" class="form-input w-full min-w-0 resize-none rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:ring-opacity-50 border border-[#475569] bg-[#1e293b] transition-all duration-200 h-12 px-4 text-[15px] font-normal leading-relaxed hover:border-[#3b82f6] focus:border-[#3b82f6] placeholder:text-[#64748b] shadow-sm @error('platform') !border-[#ef4444] !ring-[#ef4444] !ring-opacity-25 @enderror" id="platform" name="platform" value="{{ old('platform', isset($game) ? $game->platform : '') }}" placeholder="Enter platform name" required>
-        </div>
-        @error('platform')
-            <div class="text-[#ef4444] text-[13px] leading-tight">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
-
-<div class="flex gap-3 mt-8 border-t border-[#475569] pt-6">
-    <button type="submit" class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-8 bg-[#3b82f6] text-white text-sm font-semibold leading-none tracking-wide hover:bg-[#2563eb] transition-colors duration-200 shadow-sm shadow-[#3b82f6]/25">
-        {{ isset($game) ? 'Update' : 'Create' }} Game
-    </button>
-    <a href="{{ route('games.index') }}" class="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-8 bg-[#334155] text-[#94a3b8] text-sm font-semibold leading-none tracking-wide hover:bg-[#475569] hover:text-white transition-all duration-200">
-        Cancel
-    </a>
 </div> 

@@ -40,7 +40,10 @@ class GameController extends Controller
         $genres = Game::distinct()->pluck('genre')->sort();
         $platforms = Game::distinct()->pluck('platform')->sort();
 
-        $games = $query->latest()->paginate(10);
+        $games = $query->latest()->paginate(12);
+        
+        // Preserve query parameters in pagination links
+        $games->appends(request()->query());
 
         return view('games.index', compact('games', 'genres', 'platforms'));
     }
