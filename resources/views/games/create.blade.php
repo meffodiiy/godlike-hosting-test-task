@@ -12,7 +12,7 @@
                         </h1>
                     </div>
                     
-                    <form action="{{ route('games.store') }}" method="POST" class="flex flex-col gap-4">
+                    <form action="{{ route('games.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
                         @include('games.form')
                     </form>
                 </div>

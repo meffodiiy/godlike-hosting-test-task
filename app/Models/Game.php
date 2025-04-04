@@ -21,7 +21,8 @@ class Game extends Model
         'genre',
         'release_date',
         'platform',
-        'price'
+        'price',
+        'cover_image'
     ];
 
     /**

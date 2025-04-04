@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
@@ -57,19 +58,23 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'developer' => 'required|string|max:255',
-            'genre' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'developer' => 'required|max:255',
+            'genre' => 'required|max:255',
             'release_date' => 'required|date',
-            'platform' => 'required|string|max:255',
+            'platform' => 'required|max:255',
             'price' => 'required|numeric|min:0',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        Game::create($validated);
+        if ($request->hasFile('cover_image')) {
+            $validatedData['cover_image'] = $request->file('cover_image')->store('game-covers', 'public');
+        }
 
-        return redirect()->route('games.index')
-            ->with('success', 'Game created successfully.');
+        Game::create($validatedData);
+
+        return redirect()->route('games.index')->with('success', 'Game created successfully.');
     }
 
     /**
@@ -93,19 +98,27 @@ class GameController extends Controller
      */
     public function update(Request $request, Game $game)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'developer' => 'required|string|max:255',
-            'genre' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'developer' => 'required|max:255',
+            'genre' => 'required|max:255',
             'release_date' => 'required|date',
-            'platform' => 'required|string|max:255',
+            'platform' => 'required|max:255',
             'price' => 'required|numeric|min:0',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $game->update($validated);
+        if ($request->hasFile('cover_image')) {
+            // Delete old image if exists
+            if ($game->cover_image) {
+                Storage::disk('public')->delete($game->cover_image);
+            }
+            $validatedData['cover_image'] = $request->file('cover_image')->store('game-covers', 'public');
+        }
 
-        return redirect()->route('games.index')
-            ->with('success', 'Game updated successfully.');
+        $game->update($validatedData);
+
+        return redirect()->route('games.index')->with('success', 'Game updated successfully.');
     }
 
     /**
