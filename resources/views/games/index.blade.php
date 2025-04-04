@@ -79,6 +79,11 @@
         font-size: 0.875rem;
         line-height: 1.5;
         border-radius: 0.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        height: 38px;
     }
     .btn-action:hover {
         background-color: #333;
@@ -174,12 +179,71 @@
     .text-gray-700 {
         color: #ffffff !important;
     }
+    .search-container {
+        background-color: #2a2a2a;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #333;
+    }
+    .search-input {
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        color: #ffffff;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        width: 100%;
+    }
+    .search-input:focus {
+        outline: none;
+        border-color: #444;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+    .filter-select {
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        color: #ffffff;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        width: 100%;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        padding-right: 2.5rem;
+    }
+    .filter-select:focus {
+        outline: none;
+        border-color: #444;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+    .filter-select option {
+        background-color: #1a1a1a;
+        color: #ffffff;
+        padding: 8px;
+    }
+    .filter-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        align-items: flex-start;
+    }
+    .filter-group > div {
+        flex: 1;
+    }
+    .filter-group > .d-flex {
+        flex: 0 0 auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
 </style>
 
 <!-- Main Content -->
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Explore games</h1>
+        <h1 class="mb-0">Games</h1>
         <a href="{{ route('games.create') }}" class="btn btn-add">Add New Game</a>
     </div>
 
@@ -190,9 +254,45 @@
         </div>
     @endif
 
-    <!-- Search Bar -->
-    <div class="main-search mb-4">
-        <input type="search" class="form-control bg-transparent border-0 text-white" placeholder="Search for games">
+    <!-- Search and Filters -->
+    <div class="search-container">
+        <form action="{{ route('games.index') }}" method="GET">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ request('search') }}" 
+                           placeholder="Search games..." 
+                           class="search-input">
+                </div>
+            </div>
+            <div class="filter-group align-items-center">
+                <div>
+                    <select name="genre" class="filter-select">
+                        <option value="">All Genres</option>
+                        @foreach($genres as $genre)
+                            <option value="{{ $genre }}" {{ request('genre') == $genre ? 'selected' : '' }}>
+                                {{ $genre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <select name="platform" class="filter-select">
+                        <option value="">All Platforms</option>
+                        @foreach($platforms as $platform)
+                            <option value="{{ $platform }}" {{ request('platform') == $platform ? 'selected' : '' }}>
+                                {{ $platform }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                    <button type="submit" class="btn btn-action">Apply Filters</button>
+                    <a href="{{ route('games.index') }}" class="btn btn-action">Clear</a>
+                </div>
+            </div>
+        </form>
     </div>
 
     <!-- Games Table -->
@@ -203,8 +303,8 @@
                     <th>Title</th>
                     <th>Developer</th>
                     <th>Genre</th>
-                    <th>Release Date</th>
                     <th>Platform</th>
+                    <th>Release Date</th>
                     <th>Price</th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -215,8 +315,8 @@
                         <td>{{ $game->title }}</td>
                         <td>{{ $game->developer }}</td>
                         <td>{{ $game->genre }}</td>
-                        <td>{{ $game->release_date->format('M d, Y') }}</td>
                         <td>{{ $game->platform }}</td>
+                        <td>{{ $game->release_date->format('M d, Y') }}</td>
                         <td>${{ number_format($game->price, 2) }}</td>
                         <td class="text-center">
                             <a href="{{ route('games.show', $game) }}" class="btn btn-action btn-sm">View</a>

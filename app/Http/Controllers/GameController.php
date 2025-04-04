@@ -12,8 +12,36 @@ class GameController extends Controller
      */
     public function index()
     {
-        $games = Game::latest()->paginate(10);
-        return view('games.index', compact('games'));
+        $query = Game::query();
+
+        // Search functionality
+        if (request('search')) {
+            $searchTerm = request('search');
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                  ->orWhere('developer', 'like', "%{$searchTerm}%")
+                  ->orWhere('genre', 'like', "%{$searchTerm}%")
+                  ->orWhere('platform', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        // Filter by genre
+        if (request('genre')) {
+            $query->where('genre', request('genre'));
+        }
+
+        // Filter by platform
+        if (request('platform')) {
+            $query->where('platform', request('platform'));
+        }
+
+        // Get unique genres and platforms for filter dropdowns
+        $genres = Game::distinct()->pluck('genre')->sort();
+        $platforms = Game::distinct()->pluck('platform')->sort();
+
+        $games = $query->latest()->paginate(10);
+
+        return view('games.index', compact('games', 'genres', 'platforms'));
     }
 
     /**
