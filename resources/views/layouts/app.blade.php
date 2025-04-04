@@ -13,6 +13,61 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .bg-white {
+            background-color: #1a1a1a !important;
+        }
+        .border-gray-100 {
+            border-color: #333 !important;
+        }
+        .text-gray-500 {
+            color: #9a9a9a !important;
+        }
+        .text-gray-700, .hover\:text-gray-700:hover {
+            color: #ffffff !important;
+        }
+        .hover\:border-gray-300:hover {
+            border-color: #444 !important;
+        }
+        .font-medium {
+            font-weight: 500;
+        }
+        .text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+        .font-bold {
+            font-weight: 700;
+        }
+        .min-h-screen {
+            background-color: #1a1a1a;
+        }
+        .shadow {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        nav a.text-xl.font-bold {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        nav a.inline-flex {
+            color: #9a9a9a;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        nav a.inline-flex:hover {
+            color: #ffffff;
+            border-color: #444;
+        }
+        /* Content spacing */
+        .page-content {
+            margin-top: 2rem;
+        }
+    </style>
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
@@ -48,9 +103,11 @@
         @endif
 
         <!-- Page Content -->
-        <main>
-            @yield('content')
-        </main>
+        <div class="page-content">
+            <main class="container">
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 </html> 
